@@ -11,18 +11,29 @@ namespace LargeBank_ORM
     {
         //Properties
         public static string Line = "--------------------------- \n \n \n";
+        public static string UserFirstName;
 
         static void Main(string[] args)
         {
-            GreetingsMesage();
-            ListAllCustomersANDAccountInformation();
-            GetSAVENewCustomerInfo();
-           
-        
+            GetUserInfo();
+            GreetingsMesage(UserFirstName);
+            ActionController();
+            
+                 
         }
-        public static void GreetingsMesage()
+
+        //Methods
+        public static void GetUserInfo()
         {
             Console.WriteLine(Line);
+            Console.WriteLine("Welcome User!!! \n \n \n Please enter your first Name for Authenitcation Purposes...");
+            UserFirstName = Console.ReadLine();
+            Console.Clear();
+        }
+        public static void GreetingsMesage(string user)
+        {
+            Console.WriteLine(Line);
+            Console.WriteLine("Welcome Lord {0}!", user);
             Console.WriteLine("You have entered the Command Station for Bank Administration");
             Console.WriteLine("Query Data and More!!");
             Console.WriteLine(Line);
@@ -31,6 +42,34 @@ namespace LargeBank_ORM
             Console.Clear();
 
         }
+
+        public static void ActionController()
+        {
+            Console.WriteLine(Line);
+            Console.WriteLine("What would you like to do??? \n \n Type your Command.... FOO!  \n \n Type: \n ALL to view all Entries \n ADD \n To Add any Information \n EXIT to exit ");
+            string input = Console.ReadLine().ToLower();
+
+        switch(input)
+            {
+                case "all":
+                    Console.Clear();
+                    ListAllCustomersANDAccountInformation();
+                    break;
+                case "add":
+                    Console.Clear();
+                    GetSAVENewCustomerInfo();
+                    break;
+                case "exit":
+                    Console.Clear();
+                    ExitPrompt();
+                    break;
+                default:
+                    Console.Clear();
+                    ActionController();
+                    break;
+            }
+        }
+
         public static void ListAllCustomersANDAccountInformation()
         {
             using (var db = new LargeBankEntities())
@@ -49,7 +88,6 @@ namespace LargeBank_ORM
                 Console.ReadLine();
             }
         }
-
         public static void GetSAVENewCustomerInfo()
         {
             Console.WriteLine("You are about to add a new Customer to your Database!");
@@ -122,5 +160,33 @@ namespace LargeBank_ORM
 
         }
 
+        public static void ExitPrompt()
+        {
+            Console.Clear();
+            Console.WriteLine("Are you sure you want to exit? (yes/no)");
+            string input = Console.ReadLine().ToLower();
+            
+            switch(input)
+            {
+                case "yes":
+                case "y":
+                    ExitProgram();
+                    break;
+                case "no":
+                case "n":
+                    ActionController();
+                    break;
+                        default:
+                    ExitPrompt();
+                    break;
+            }
+            
+
+
+        }
+        public static void ExitProgram()
+        {
+            Environment.Exit(0);
+        }
     }
 }
