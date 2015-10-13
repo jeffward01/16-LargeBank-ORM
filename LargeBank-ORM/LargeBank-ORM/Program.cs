@@ -18,16 +18,37 @@ namespace LargeBank_ORM
             GetUserInfo();
             GreetingsMesage(UserFirstName);
             ActionController();
-            
-                 
+                         
         }
 
         //Methods
         public static void GetUserInfo()
         {
-            Console.WriteLine(Line);
-            Console.WriteLine("Welcome User!!! \n \n \n Please enter your first Name for Authenitcation Purposes...");
-            UserFirstName = Console.ReadLine();
+            while (true)
+            {
+                try
+                {
+                    Console.Clear();
+                    Console.WriteLine(Line);
+                    Console.WriteLine("Welcome User!!! \n \n \n Please enter your first Name for Authentication Purposes...");
+                    string input = Console.ReadLine();
+
+
+                    if (input == null || input == "")
+                    {
+                        Console.WriteLine("Please enter a name!! Cannot be blank...");
+                        continue;
+                    }
+                    else
+                    {
+                        UserFirstName = input;
+                        break;
+                    }
+                }
+                catch
+                {
+                }           
+            }       
             Console.Clear();
         }
         public static void GreetingsMesage(string user)
@@ -46,26 +67,77 @@ namespace LargeBank_ORM
         public static void ActionController()
         {
             Console.WriteLine(Line);
-            Console.WriteLine("What would you like to do??? \n \n Type your Command.... FOO!  \n \n Type: \n ALL to view all Entries \n ADD \n To Add any Information \n EXIT to exit ");
+            Console.WriteLine("----- Welcome Lord {0} to the ------- MAIN SCREEN ----- \n \n", UserFirstName);
+            Console.WriteLine("What would you like to do???  Please enter the number of the option you wish to choose.... \n ");
+            Console.WriteLine("1. View all Customers Accounts and Transactions");
+            Console.WriteLine("2. Add Information (Customers, Accounts, Transactions)");
+            Console.WriteLine("3. Exit Program");
             string input = Console.ReadLine().ToLower();
 
         switch(input)
             {
-                case "all":
+                case "1":
                     Console.Clear();
                     ListAllCustomersANDAccountInformation();
                     break;
-                case "add":
+                case "2":
                     Console.Clear();
-                    GetSAVENewCustomerInfo();
+                    AddInformationController();
                     break;
-                case "exit":
+                case "3":
                     Console.Clear();
                     ExitPrompt();
                     break;
                 default:
                     Console.Clear();
                     ActionController();
+                    break;
+            }
+        }
+
+        public static void AddInformationController()
+        {
+            Console.WriteLine(Line);
+            Console.WriteLine("Welcome Lord {0} to the Add Customer Information of ANY Kind Station.");
+            Console.WriteLine("What would you like to add? \n ");
+            Console.WriteLine("Please type the option of the action you would like to execute...");
+            Console.WriteLine("1. Add new Customer.");
+            Console.WriteLine("2. Add Accounts to a Customer.");
+            Console.WriteLine("3.  Add Transactions to an Account.");
+            Console.WriteLine("4. Remove Transactions from a Customer.");
+            Console.WriteLine("5. Remove Accounts (and all Transactions) from a Customer.");
+            Console.WriteLine("6. Go back to Main Menu. ");
+            string input = Console.ReadLine();
+            switch (input)
+            {
+                case "1":
+                    Console.Clear();
+                    GetSAVENewCustomerInfo();
+                    break;
+                case "2":
+                    Console.Clear();
+                    //Insert Method Here
+                    break;
+                case "3":
+                    Console.Clear();
+                    //Insert Method Here
+                    break;
+                case "4":
+                    Console.Clear();
+                    //Insert Method Here
+                    break;
+                case "5":
+                    Console.Clear();
+                    //Insert Method Here
+                    break;
+                case "6":
+                    Console.Clear();
+                    ActionController();
+                    break;
+
+                default:
+                    Console.Clear();
+                    AddInformationController();
                     break;
             }
         }
@@ -84,10 +156,16 @@ namespace LargeBank_ORM
                     }
                 }
 
-                Console.WriteLine("Please press Enter to continue...");
+                //Go back to Main Menu
+                Console.WriteLine(Line);
+                Console.WriteLine("Press Enter to return to Main Menu...");
                 Console.ReadLine();
+                Console.Clear();
+                ActionController();
             }
         }
+
+
         public static void GetSAVENewCustomerInfo()
         {
             Console.WriteLine("You are about to add a new Customer to your Database!");
@@ -128,6 +206,9 @@ namespace LargeBank_ORM
 
             //Save new Customer in DB
             SaveNewCustomerinDB(newCustFirstName, newCustLastName, newCustAddress1, newCustAddress2, newCustCity, newCustState, newCustZipCode);
+
+           
+
         }
         public static void SaveNewCustomerinDB(string firstName, string lastName, string address1, string address2, string city, string state, string zip)
         {
@@ -155,7 +236,7 @@ namespace LargeBank_ORM
                 catch(Exception)
                 {
                     Console.WriteLine("Your new Customer could not be saved. Please try again or contact System Admin.");
-                }
+                }             
             }
 
         }
