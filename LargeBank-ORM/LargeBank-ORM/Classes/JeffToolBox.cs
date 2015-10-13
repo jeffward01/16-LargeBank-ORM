@@ -126,7 +126,7 @@ namespace LargeBank_ORM.Classes
                         continue;
 
                     }
-
+                    input = JeffToolBox.RemoveSpecialCharacters(input);
                     decimal returnValue = decimal.Parse(input);
 
 

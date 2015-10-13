@@ -116,7 +116,7 @@ namespace LargeBank_ORM
                     break;
                 case "2":
                     Console.Clear();
-                    //Insert Method Here
+                    AddAccountsToCustomerPrompt();
                     break;
                 case "3":
                     Console.Clear();
@@ -176,7 +176,7 @@ namespace LargeBank_ORM
             Console.WriteLine("Please enter the Customer's First Name");
             string newCustFirstName = Console.ReadLine();
 
-            //Get New Customers Lasst Name
+            //Get New Customers Last Name
             Console.WriteLine("Please Enter the Customer's Last Name");
             string newCustLastName = Console.ReadLine();
 
@@ -232,6 +232,13 @@ namespace LargeBank_ORM
                     db.Customers.Add(customer);
                     db.SaveChanges();
                     Console.WriteLine("Your New Customer has been added to the Database. \n Created on: {6} \n \n  Your Customers name is: {0} {1}. \n Address: {2} \n {7} \n City: {3} \n State: {4} \n Zip: {5}.", customer.FirstName, customer.LastName, customer.Address1, customer.City, customer.States, customer.Zip, customer.CreatedDate, customer.Address2);
+
+                    //Go back to Main Menu
+                    Console.WriteLine(Line);
+                    Console.WriteLine("Press Enter to return to Main Menu...");
+                    Console.ReadLine();
+                    Console.Clear();
+                    ActionController();
                 }
                 catch(Exception)
                 {
@@ -240,6 +247,124 @@ namespace LargeBank_ORM
             }
 
         }
+
+        public static void AddAccountsToCustomerPrompt()
+        {
+            Console.Clear();
+            Console.WriteLine(Line);
+            Console.WriteLine("Welcome to ADD ACCOUNT INFORMATION MENU \n \n");
+            Console.WriteLine("Lord {0}", UserFirstName);
+            Console.WriteLine("Would you like to: ");
+            Console.WriteLine("1. Search by Specific Customer Name?  (Pick this option if you know the First and Last Name of the customer you would like to add Accoutns to.");
+            Console.WriteLine("2. Choose which customer to add Accounts to from a list of All your Customers. ");
+            Console.WriteLine("3. Go back to the MAIN MENU");
+            Console.WriteLine("4. Exit Program");
+            string input = Console.ReadLine();
+
+            switch (input)
+            {
+                case "1":
+                    //Search from Specific Customer Name
+                    Console.Clear();
+                    AddAccountsToCustomerBySearch();
+                    break;
+                case "2":
+                    Console.Clear();
+                    //Choose from list of ALL customers.  
+                    break;
+                case "3":
+                    Console.Clear();
+                    ActionController();
+                    break;
+                case "4":
+                    Console.Clear();
+                    ExitPrompt();
+                    break;
+                default:
+                    Console.Clear();
+                    AddAccountsToCustomerPrompt();
+                    break;
+            }
+        }
+
+        public static void AddAccountsToCustomerBySearch()
+        {
+            Console.Clear();
+            Console.WriteLine(Line);
+            Console.WriteLine("Lord {0}, \n \n ", UserFirstName);
+            Console.WriteLine("Please enter the First Name of the customer of which you would like to add Accounts to");
+            string SearchFirstName = Console.ReadLine();
+            Console.WriteLine("Please enter the Last Name of the customer of which you would like to add Accounts to");
+            string SearchLastName = Console.ReadLine();
+
+            using (var db = new LargeBankEntities())
+            {
+                var customer = db.Customers.FirstOrDefault(c => c.FirstName == SearchFirstName && c.LastName == SearchLastName);
+
+                if(customer != null)
+                {
+                    AddAccountsToCustomer(customer);
+                    db.SaveChanges();
+
+                    AddAccountsToCustomerPrompt();
+                }
+                else
+                {
+                    Console.WriteLine("Your search returned zero results");
+                    Console.WriteLine("\n Press Enter to Continue");
+                    Console.ReadLine();
+                    AddAccountsToCustomerPrompt();
+
+                }
+                //Old Method
+                //foreach (var customer in db.Customers)
+                //{
+                //    if(customer.FirstName == SearchFirstName && customer.LastName == SearchLastName)
+                //    {
+                //        AddAccountsToCustomer(customer);
+                //        db.SaveChanges();
+                //    }
+                //    else
+                //    {
+                //        //Build
+                //        Console.WriteLine("Your search did not");
+
+                //    }
+                //}
+            }
+        }
+        public static void AddAccountsToCustomer(Customer customer)
+        {
+            
+                decimal myAccountNumberDecimal = JeffToolBox.ReadDecimal("Please enter the Account Number (Numbers ONLY) That you wish to add...", true, true);
+                int myAccountNumber = (int)myAccountNumberDecimal;
+
+                decimal myAccountBalanceDecimal = JeffToolBox.ReadDecimal("Please enter the Account balance using Numbers Only", true, true);
+                int myAccountBalance = (int)myAccountBalanceDecimal;
+
+                //Create a new Account
+                var account = new Account();
+                
+                //Add Creation Date to My Account
+                account.CreatedDate = DateTime.Now;
+
+                //Add Account Number to account
+                account.AccountNumber = myAccountNumber;
+
+                //Add Balance to Account
+                account.Balance = myAccountBalance;
+
+                //Attach Accounts to Customer || Save to Database
+                customer.Accounts.Add(account);       
+
+                Console.WriteLine(Line);
+                Console.WriteLine("You added Account Number {0} to Customer: {1} {2}.  \n The Account has a Balance of {3} ", account.AccountNumber, customer.FirstName, customer.LastName, account.Balance.ToString("C"));
+                Console.WriteLine("\n \n Please press Enter to Return to the Add Account Information Menu.");
+                Console.ReadLine();
+                
+            
+        }
+
 
         public static void ExitPrompt()
         {
@@ -261,9 +386,6 @@ namespace LargeBank_ORM
                     ExitPrompt();
                     break;
             }
-            
-
-
         }
         public static void ExitProgram()
         {
