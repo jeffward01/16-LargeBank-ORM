@@ -57,6 +57,7 @@
     <Compile Include="Account.cs">
       <DependentUpon>LargeBankModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Classes\JeffToolBox.cs" />
     <Compile Include="Customer.cs">
       <DependentUpon>LargeBankModel.tt</DependentUpon>
     </Compile>
