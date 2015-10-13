@@ -1,1 +1,10 @@
 C:\Users\jward01\Documents\Visual Studio 2015\Projects\LargeBank-ORM\LargeBank-ORM\LargeBank-ORM\bin\Debug\LargeBank-ORM.exe.config
+C:\Users\jward01\Documents\Visual Studio 2015\Projects\LargeBank-ORM\LargeBank-ORM\LargeBank-ORM\bin\Debug\LargeBank-ORM.exe
+C:\Users\jward01\Documents\Visual Studio 2015\Projects\LargeBank-ORM\LargeBank-ORM\LargeBank-ORM\bin\Debug\LargeBank-ORM.pdb
+C:\Users\jward01\Documents\Visual Studio 2015\Projects\LargeBank-ORM\LargeBank-ORM\LargeBank-ORM\bin\Debug\EntityFramework.dll
+C:\Users\jward01\Documents\Visual Studio 2015\Projects\LargeBank-ORM\LargeBank-ORM\LargeBank-ORM\bin\Debug\EntityFramework.SqlServer.dll
+C:\Users\jward01\Documents\Visual Studio 2015\Projects\LargeBank-ORM\LargeBank-ORM\LargeBank-ORM\bin\Debug\EntityFramework.xml
+C:\Users\jward01\Documents\Visual Studio 2015\Projects\LargeBank-ORM\LargeBank-ORM\LargeBank-ORM\bin\Debug\EntityFramework.SqlServer.xml
+C:\Users\jward01\Documents\Visual Studio 2015\Projects\LargeBank-ORM\LargeBank-ORM\LargeBank-ORM\obj\Debug\LargeBank-ORM.csprojResolveAssemblyReference.cache
+C:\Users\jward01\Documents\Visual Studio 2015\Projects\LargeBank-ORM\LargeBank-ORM\LargeBank-ORM\obj\Debug\LargeBank-ORM.exe
+C:\Users\jward01\Documents\Visual Studio 2015\Projects\LargeBank-ORM\LargeBank-ORM\LargeBank-ORM\obj\Debug\LargeBank-ORM.pdb
