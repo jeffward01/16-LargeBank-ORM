@@ -148,11 +148,11 @@ namespace LargeBank_ORM
             {
                 foreach (var customer in db.Customers)
                 {
-                    Console.WriteLine("Customer First Name and Last Name: " + customer.FirstName +" "+customer.LastName+".");
+                    Console.WriteLine(" \n Customer First Name and Last Name: " + customer.FirstName +" "+customer.LastName+".");
 
                     foreach (var account in customer.Accounts)
                     {
-                        Console.WriteLine("The balance for account " + account.AccountNumber + " is: " + account.Balance.ToString("C")+ Environment.NewLine);             
+                        Console.WriteLine("The balance for account " + account.AccountNumber + " is: " + account.Balance.ToString("C"));             
                     }
                 }
 
@@ -270,7 +270,7 @@ namespace LargeBank_ORM
                     break;
                 case "2":
                     Console.Clear();
-                    //Choose from list of ALL customers.  
+                    AddAccountToCustomerByListing();  
                     break;
                 case "3":
                     Console.Clear();
@@ -333,9 +333,63 @@ namespace LargeBank_ORM
                 //}
             }
         }
+        public static void AddAccountToCustomerByListing()
+        {
+            Console.Clear();
+            Console.WriteLine(Line);
+            Console.WriteLine("Lord {0}, \n \n ", UserFirstName);
+            Console.WriteLine("Please select the Customer Number  Associated with the name of the customer you would like to add accounts to.");
+
+            using (var db = new LargeBankEntities())
+            {
+                foreach (var customer in db.Customers)
+                {
+                    Console.WriteLine( customer.CustomerId + "). " + customer.FirstName +" " +customer.LastName +".");
+                }
+
+
+                  decimal ChosenCustomerDecimal = JeffToolBox.ReadDecimal("\n Enter the Customer Number you would like to Add Accounts to:", true, true);
+                  int ChosenCustomerInt = (int)ChosenCustomerDecimal;
+
+                var chosencustomer = db.Customers.Find(ChosenCustomerInt);
+
+                if(chosencustomer == null)
+                {
+                    Console.WriteLine("Your search returned zero results");
+                    Console.WriteLine("\n Press Enter to Continue");
+                    Console.ReadLine();
+                    AddAccountsToCustomerPrompt();
+                }
+                else
+                {
+                    AddAccountsToCustomer(chosencustomer);
+                    db.SaveChanges();
+
+                    AddAccountsToCustomerPrompt();
+                }
+               
+                //foreach (var customer in db.Customers)
+                //{
+                //    if(ChosenCustomerInt == customer.CustomerId)
+                //    {
+                        
+                //    }
+                //    else
+                //    {
+                        
+
+                //    }
+                //}
+
+            }
+
+
+        }
         public static void AddAccountsToCustomer(Customer customer)
         {
-            
+            Console.Clear();
+            Console.WriteLine(Line);
+            Console.WriteLine("You are about to add an account to Customer Number {0}. Customer Name {1} {2} \n ",customer.CustomerId, customer.FirstName, customer.LastName);
                 decimal myAccountNumberDecimal = JeffToolBox.ReadDecimal("Please enter the Account Number (Numbers ONLY) That you wish to add...", true, true);
                 int myAccountNumber = (int)myAccountNumberDecimal;
 
@@ -360,9 +414,7 @@ namespace LargeBank_ORM
                 Console.WriteLine(Line);
                 Console.WriteLine("You added Account Number {0} to Customer: {1} {2}.  \n The Account has a Balance of {3} ", account.AccountNumber, customer.FirstName, customer.LastName, account.Balance.ToString("C"));
                 Console.WriteLine("\n \n Please press Enter to Return to the Add Account Information Menu.");
-                Console.ReadLine();
-                
-            
+                Console.ReadLine();           
         }
 
 
