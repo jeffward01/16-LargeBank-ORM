@@ -12,6 +12,7 @@ namespace LargeBank_ORM
         //Properties
         public static string Line = "--------------------------- \n \n \n";
         public static string UserFirstName;
+        public static int AccountID;
 
         static void Main(string[] args)
         {
@@ -64,14 +65,17 @@ namespace LargeBank_ORM
 
         }
 
+
         public static void ActionController()
         {
+            Console.Clear();
             Console.WriteLine(Line);
             Console.WriteLine("----- Welcome Lord {0} to the ------- MAIN SCREEN ----- \n \n", UserFirstName);
             Console.WriteLine("What would you like to do???  Please enter the number of the option you wish to choose.... \n ");
             Console.WriteLine("1. View all Customers Accounts and Transactions");
-            Console.WriteLine("2. Add Information (Customers, Accounts, Transactions)");
-            Console.WriteLine("3. Exit Program");
+            Console.WriteLine("2. View Individual Customer Information, Accounts and Transactions.");
+            Console.WriteLine("3. Add Information (Customers, Accounts, Transactions)");
+            Console.WriteLine("4. Exit Program");
             string input = Console.ReadLine().ToLower();
 
         switch(input)
@@ -82,9 +86,13 @@ namespace LargeBank_ORM
                     break;
                 case "2":
                     Console.Clear();
-                    AddInformationController();
+                    ViewController();
                     break;
                 case "3":
+                    Console.Clear();
+                    AddInformationController();
+                    break;
+                case "4":
                     Console.Clear();
                     ExitPrompt();
                     break;
@@ -94,6 +102,110 @@ namespace LargeBank_ORM
                     break;
             }
         }
+        public static void ViewController()
+        {
+            Console.Clear();
+            Console.WriteLine(Line);
+            Console.WriteLine("Welcome Lord {0}, to the VIEW CUSTOMER INFORMATION MENU.",UserFirstName);
+            Console.WriteLine("Please select the number of the choice from the following options");
+            Console.WriteLine("1. Locate Customer from Search (Must know First AND Last Name).");
+            Console.WriteLine("2. Locate Customer from a List");
+            Console.WriteLine("3. Locate by Account Number");
+            Console.WriteLine("4. Go back to MAIN MENU");
+            Console.WriteLine("5. Exit Program");
+            string input = Console.ReadLine();
+            switch (input)
+            {
+                case "1":
+                    Console.Clear();
+                    LocateCustomerFromSearch();
+                    break;
+                case "2":
+                    Console.Clear();
+                    //Locate Customer from list
+                    break;
+                case "3":
+                    Console.Clear();
+                    //Locate By account number
+                    break;
+                case "4":
+                    Console.Clear();
+                    ActionController();
+                    break;
+                case "5":
+                    Console.Clear();
+                    ExitPrompt();
+                    break;
+                default:
+                    Console.Clear();
+                    ViewController();
+                    break;
+            }
+
+
+        }
+        
+        public static void LocateCustomerFromSearch()
+        {
+            Console.Clear();
+            Console.WriteLine(Line);
+            Console.WriteLine("Lord {0}, \n \n ", UserFirstName);
+            Console.WriteLine("Please enter the First Name of the customer of which you would like to add Transactions to");
+            string SearchFirstName = Console.ReadLine();
+            Console.WriteLine("Please enter the Last Name of the customer of which you would like to add Transactions to");
+            string SearchLastName = Console.ReadLine();
+
+            using (var db = new LargeBankEntities())
+            {
+                var customer = db.Customers.FirstOrDefault(c => c.FirstName == SearchFirstName && c.LastName == SearchLastName);
+
+                if (customer != null)
+                {
+                    //  AddTransactionToAccount(customer, db);\
+                    EntityViewController(customer, db);
+                    db.SaveChanges();
+
+                    ViewController();
+                }
+                else
+                {
+                    Console.WriteLine("Your search returned zero results");
+                    Console.WriteLine("\n Press Enter to Continue");
+                    Console.ReadLine();
+                    ViewController();
+                }
+            }
+        }
+
+        //Build
+        //Under cpnstructiom
+        sadsad
+        public static void EntityViewController(Customer customer, LargeBankEntities db)
+        {
+            int counter = 1;
+            Console.Clear();
+            Console.WriteLine(Line);
+            Console.WriteLine("Welcome Lord {0}, to the Main View Page",UserFirstName);
+            Console.WriteLine("Your Customer Information Below: \n \n ");
+            Console.WriteLine("Customer Name: {0} {1}", customer.FirstName,customer.LastName);
+           // Console.WriteLine("Customer ID: {6}", customer.CustomerId.ToString());
+         //   Console.WriteLine("Customer Address: {2} {3}",customer.Address1,customer.Address2);
+         //   Console.WriteLine("Customer City: {4}",customer.City);
+         //   Console.WriteLine("Customer State: {5} \n \n ", customer.States);
+
+            Console.WriteLine("{7} {8} Has {9} Accounts", customer.FirstName, customer.LastName, customer.Accounts.Count);
+            foreach (var account in db.Accounts)
+            {
+                Console.WriteLine("{10}). Account Number: {11} Account ID: {12} --  Account Balance: ${13}",counter,account.AccountNumber,account.AccountId,account.Balance);
+                counter++;
+            }
+
+            Console.WriteLine("\n \n End Reached");
+            Console.ReadLine();
+
+
+        }
+
 
         public static void AddInformationController()
         {
@@ -103,7 +215,7 @@ namespace LargeBank_ORM
             Console.WriteLine("Please type the option of the action you would like to execute...");
             Console.WriteLine("1. Add new Customer.");
             Console.WriteLine("2. Add Accounts to a Customer.");
-            Console.WriteLine("3.  Add Transactions to an Account.");
+            Console.WriteLine("3. Add Transactions to an Account.");
             Console.WriteLine("4. Remove Transactions from a Customer.");
             Console.WriteLine("5. Remove Accounts (and all Transactions) from a Customer.");
             Console.WriteLine("6. Go back to Main Menu. ");
@@ -120,7 +232,7 @@ namespace LargeBank_ORM
                     break;
                 case "3":
                     Console.Clear();
-                    //Insert Method Here
+                    AddTransactionPrompt();
                     break;
                 case "4":
                     Console.Clear();
@@ -144,16 +256,39 @@ namespace LargeBank_ORM
 
         public static void ListAllCustomersANDAccountInformation()
         {
+            
+
             using (var db = new LargeBankEntities())
             {
+               
                 foreach (var customer in db.Customers)
                 {
                     Console.WriteLine(" \n Customer First Name and Last Name: " + customer.FirstName +" "+customer.LastName+".");
-
+                    
                     foreach (var account in customer.Accounts)
                     {
+                        AccountID = account.AccountId;
                         Console.WriteLine("The balance for account " + account.AccountNumber + " is: " + account.Balance.ToString("C"));             
                     }
+
+                    /* transaction Display Turned off here.
+                    Displaying Wrong at the moment
+
+                      build start here 
+                    foreach (var transaction in db.Transactions)
+                    {
+                        //  string accountNum = transaction.Account.AccountNumber.ToString();
+
+                        //Build out this.  It outputs ALL transactions each cycle.  Not just transactions for user.
+                        if (AccountID == transaction.AccountId)
+                        {
+                            Console.WriteLine("Date {2}: Transaction Number {0} from account #{1}  Amount: ${3} .", transaction.TransactionId, transaction.AccountId, transaction.TransactionDate, transaction.Amount);
+
+                        }
+
+
+                    }
+                    */
                 }
 
                 //Go back to Main Menu
@@ -165,6 +300,115 @@ namespace LargeBank_ORM
             }
         }
 
+        public static void AddTranasactionBySearch()
+        {
+            Console.Clear();
+            Console.WriteLine(Line);
+            Console.WriteLine("Lord {0}, \n \n ", UserFirstName);
+            Console.WriteLine("Please enter the First Name of the customer of which you would like to add Transactions to");
+            string SearchFirstName = Console.ReadLine();
+            string SearchLastName = Console.ReadLine();
+
+            using (var db = new LargeBankEntities())
+            {
+                var customer = db.Customers.FirstOrDefault(c => c.FirstName == SearchFirstName && c.LastName == SearchLastName);
+
+                if (customer != null)
+                {
+                   
+                    var account = new Account();
+                    AddTransactionToAccount(customer, db);
+                    db.SaveChanges();
+
+                    AddTransactionPrompt();
+                }
+                else
+                {
+                    Console.WriteLine("Your search returned zero results");
+                    Console.WriteLine("\n Press Enter to Continue");
+                    Console.ReadLine();
+                    AddTransactionPrompt();
+                }
+            }
+        }
+
+        public static void AddTransactionByList()
+        {
+            Console.Clear();
+            Console.WriteLine(Line);
+            Console.WriteLine("Lord {0}, \n \n ", UserFirstName);
+            Console.WriteLine("Please select the Customer Number  Associated with the name of the customer you would like to add Transactions to.");
+
+            using (var db = new LargeBankEntities())
+            {
+                foreach (var customer in db.Customers)
+                {
+                    Console.WriteLine(customer.CustomerId + "). " + customer.FirstName + " " + customer.LastName + ".");
+                }
+
+
+                decimal ChosenCustomerDecimal = JeffToolBox.ReadDecimal("\n Enter the Customer Number you would like to Add Transactions to:", true, true);
+                int ChosenCustomerInt = (int)ChosenCustomerDecimal;
+
+                var chosencustomer = db.Customers.Find(ChosenCustomerInt);
+
+                if (chosencustomer == null)
+                {
+                    Console.WriteLine("Your search returned zero results");
+                    Console.WriteLine("\n Press Enter to Continue");
+                    Console.ReadLine();
+                    AddTransactionPrompt();
+                }
+                else
+                {
+                    AddTransactionToAccount(chosencustomer, db);
+                    db.SaveChanges();
+
+                    AddTransactionPrompt();
+                }
+            }
+        }
+
+
+        public static void AddTransactionPrompt()
+        {
+            Console.Clear();
+            Console.WriteLine(Line);
+            Console.WriteLine("Welcome to ADD ACCOUNT INFORMATION MENU \n \n");
+            Console.WriteLine("Lord {0}", UserFirstName);
+            Console.WriteLine("\n SELECT USER TO ADD TRANSACTION TO:  ");
+            Console.WriteLine("1. Select User Specific Customer Name?  (Pick this option if you know the First and Last Name of the customer you would like to add Transactions to.");
+            Console.WriteLine("2. Choose which customer to add Transactions to from a list of All your Customers. ");
+            Console.WriteLine("3. Go back to the MAIN MENU");
+            Console.WriteLine("4. Exit Program");
+            string input = Console.ReadLine();
+
+            switch (input)
+            {
+                case "1":
+                    //Search from Specific Customer Name
+                    Console.Clear();
+                    AddTranasactionBySearch();
+                    break;
+                case "2":
+                    Console.Clear();
+                    AddTransactionByList();
+                    break;
+                case "3":
+                    Console.Clear();
+                    ActionController();
+                    break;
+                case "4":
+                    Console.Clear();
+                    ExitPrompt();
+                    break;
+                default:
+                    Console.Clear();
+                    AddTransactionPrompt();
+                    break;
+            }
+
+        }
 
         public static void GetSAVENewCustomerInfo()
         {
@@ -416,7 +660,57 @@ namespace LargeBank_ORM
                 Console.WriteLine("\n \n Please press Enter to Return to the Add Account Information Menu.");
                 Console.ReadLine();           
         }
+        public static void AddTransactionToAccount(Customer customer, LargeBankEntities db)
+        {
+            Console.Clear();
+            Console.WriteLine(Line);
+            Console.WriteLine("You are about to add a Transaction to Customer Number {0}. Customer Name {1} {2} \n ", customer.CustomerId, customer.FirstName, customer.LastName);
+            Console.WriteLine("Please select the account you wish to add a Transaction to:");
+            foreach (var account in customer.Accounts)
+            {
+                Console.WriteLine(account.AccountId+"). #"+account.AccountNumber+" Account Balance: "+account.Balance.ToString("C"));
+            }
 
+            decimal ChosenCustomerDecimal = JeffToolBox.ReadDecimal("\n Enter the Account Number you would like to Add Transactions to:", true, true);
+            int ChosenCustomerInt = (int)ChosenCustomerDecimal;
+
+            var chosenAccount = db.Accounts.Find(ChosenCustomerInt);
+
+            if (chosenAccount == null)
+            {
+                Console.WriteLine("Your search returned zero results");
+                Console.WriteLine("\n Press Enter to Continue");
+                Console.ReadLine();
+                AddTransactionPrompt();
+            }
+            else
+            {
+
+
+                decimal myAmountDecimal = JeffToolBox.ReadDecimal("Please enter the Transaction Amount $(Numbers ONLY) That you wish to add...", true, true);
+                int myTransactionAmountInt = (int)myAmountDecimal;
+
+
+
+                //Create a new Account
+                var transaction = new Transaction();
+
+                //Add Creation Date to My Account
+                transaction.TransactionDate = DateTime.Now;
+
+                //Add Account Number to account
+                transaction.Amount = myTransactionAmountInt;
+
+
+                chosenAccount.Transactions.Add(transaction);
+
+                Console.WriteLine(Line);
+                Console.WriteLine("You added Transaction Number {0} to Customer: {1} {2}.  \n The Transaciont Amount was: {3} ", transaction.TransactionId, customer.FirstName, customer.LastName, transaction.Amount);
+                Console.WriteLine("\n \n Please press Enter to Return to the Add Transaction Information Menu.");
+                Console.ReadLine();
+            }
+    
+        }
 
         public static void ExitPrompt()
         {
